@@ -43,22 +43,27 @@ tp_image_utils::ColorMap comvertToColorMap(const CleanImage& tmp)
   if(w<1 || h<1)
     return tp_image_utils::ColorMap();
 
-  const uint8_t* p = static_cast<const uint8_t*>(FreeImage_GetBits(image.i));
-
-  if(!p)
-    return tp_image_utils::ColorMap();
-
-  const uint8_t* pMax = p + ((w*h)*4);
-
   tp_image_utils::ColorMap dst{w, h};
   TPPixel* d = dst.data();
-
-  for(; p<pMax; p+=4, d++)
+  for(size_t y=0; y<h; y++)
   {
-    d->r = p[2];
-    d->g = p[1];
-    d->b = p[0];
-    d->a = p[3];
+    //From the FreeImage documentation
+    //In FreeImage, FIBITMAP are based on a coordinate system that is upside down relative to usual
+    //graphics conventions. Thus, the scanlines are stored upside down, with the first scan in
+    //memory being the bottommost scan in the image.
+    const uint8_t* s = static_cast<uint8_t*>(FreeImage_GetScanLine(image.i, int((h-1)-y)));
+
+    if(!s)
+      return tp_image_utils::ColorMap();
+
+    const uint8_t* sMax = s+(w*4);
+    for(; s<sMax; d++, s+=4)
+    {
+      d->r = s[2];
+      d->g = s[1];
+      d->b = s[0];
+      d->a = s[3];
+    }
   }
 
   return dst;
