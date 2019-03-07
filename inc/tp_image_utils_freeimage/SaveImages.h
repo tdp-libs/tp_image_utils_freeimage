@@ -3,10 +3,10 @@
 
 #include "tp_image_utils_freeimage/Globals.h"
 
-#include "tp_image_utils/ColorMap.h"
-#include "tp_image_utils/ByteMap.h"
-
-#include <vector>
+namespace tp_image_utils
+{
+class ColorMap;
+}
 
 namespace tp_image_utils_freeimage
 {
