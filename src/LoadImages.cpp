@@ -84,7 +84,7 @@ tp_image_utils::ColorMap loadImage(const std::string& path)
 tp_image_utils::ColorMap loadImageFromData(const std::string& data)
 {
   CleanImage tmp;
-  FIMEMORY* stream = FreeImage_OpenMemory(const_cast<BYTE*>(reinterpret_cast<const BYTE*>(data.data())),
+  auto* stream = FreeImage_OpenMemory(const_cast<BYTE*>(reinterpret_cast<const BYTE*>(data.data())),
                                           DWORD(data.size()));
   FREE_IMAGE_FORMAT format = FreeImage_GetFileTypeFromMemory(stream);
   tmp.i = FreeImage_LoadFromMemory(format, stream);
