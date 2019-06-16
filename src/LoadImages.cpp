@@ -17,7 +17,11 @@ namespace
 //##################################################################################################
 struct CleanImage
 {
+  TP_NONCOPYABLE(CleanImage);
   FIBITMAP* i{nullptr};
+
+  CleanImage()=default;
+
   ~CleanImage()
   {
     if(i)

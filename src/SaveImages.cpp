@@ -14,7 +14,11 @@ namespace
 //##################################################################################################
 struct CleanImage
 {
+  TP_NONCOPYABLE(CleanImage);
   FIBITMAP* i{nullptr};
+
+  CleanImage() = default;
+
   ~CleanImage()
   {
     if(i)
@@ -47,7 +51,7 @@ bool convertImage(const tp_image_utils::ColorMap& image, CleanImage& tmp)
     //In FreeImage, FIBITMAP are based on a coordinate system that is upside down relative to usual
     //graphics conventions. Thus, the scanlines are stored upside down, with the first scan in
     //memory being the bottommost scan in the image.
-    uint8_t* d = static_cast<uint8_t*>(FreeImage_GetScanLine(tmp.i, int((h-1)-y)));
+    auto d = static_cast<uint8_t*>(FreeImage_GetScanLine(tmp.i, int((h-1)-y)));
     uint8_t* dMax = d+(w*4);
     for(; d<dMax; s++, d+=4)
     {
