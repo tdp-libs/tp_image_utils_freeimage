@@ -36,7 +36,30 @@ tp_image_utils::ColorMap comvertToColorMap(const CleanImage& tmp)
     return tp_image_utils::ColorMap();
 
   CleanImage image;
-  image.i = FreeImage_ConvertTo32Bits(tmp.i);
+
+  switch(FreeImage_GetImageType(tmp.i))
+  {
+  case FIT_BITMAP: [[fallthrough]];
+  case FIT_RGB16:  [[fallthrough]];
+  case FIT_RGBA16: [[fallthrough]];
+  case FIT_RGBF:   [[fallthrough]];
+  case FIT_RGBAF:
+  {
+    image.i = FreeImage_ConvertTo32Bits(tmp.i);
+    break;
+  }
+  default:
+  {
+    CleanImage standard;
+    standard.i = FreeImage_ConvertToStandardType(tmp.i);
+
+    if(!standard.i)
+      return tp_image_utils::ColorMap();
+
+    image.i = FreeImage_ConvertTo32Bits(standard.i);
+    break;
+  }
+  }
 
   if(!image.i)
     return tp_image_utils::ColorMap();
