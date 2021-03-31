@@ -8,7 +8,7 @@
 namespace tp_image_utils_freeimage
 {
 //##################################################################################################
-//! Call this to install tp_image_utils_freeimage in tp_image_utils
+//! Call this to install tp_image_utils_freeimage into tp_image_utils for loading and saving images.
 void init();
 }
 
