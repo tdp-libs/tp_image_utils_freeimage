@@ -30,7 +30,7 @@ struct CleanImage
 };
 
 //##################################################################################################
-tp_image_utils::ColorMap comvertToColorMap(const CleanImage& tmp)
+tp_image_utils::ColorMap convertToColorMap(const CleanImage& tmp)
 {
   if(!tmp.i)
     return tp_image_utils::ColorMap();
@@ -104,7 +104,7 @@ tp_image_utils::ColorMap loadImage(const std::string& path)
   CleanImage tmp;
   FREE_IMAGE_FORMAT format = FreeImage_GetFileType(path.c_str(), 0);
   tmp.i = FreeImage_Load(format, path.c_str());
-  return comvertToColorMap(tmp);
+  return convertToColorMap(tmp);
 }
 
 //##################################################################################################
@@ -116,7 +116,7 @@ tp_image_utils::ColorMap loadImageFromData(const std::string& data)
   FREE_IMAGE_FORMAT format = FreeImage_GetFileTypeFromMemory(stream);
   tmp.i = FreeImage_LoadFromMemory(format, stream);
   FreeImage_CloseMemory(stream);
-  return comvertToColorMap(tmp);
+  return convertToColorMap(tmp);
 }
 
 //##################################################################################################
