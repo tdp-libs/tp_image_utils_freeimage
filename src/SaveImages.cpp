@@ -1,7 +1,7 @@
 #include "tp_image_utils_freeimage/SaveImages.h"
 #include "tp_image_utils/ColorMap.h"
 
-#include "tp_utils/Globals.h"
+#include "tp_utils/DebugUtils.h"
 
 #include <FreeImage.h>
 
@@ -28,12 +28,12 @@ struct CleanImage
 
 
 //##################################################################################################
-bool convertImage(const tp_image_utils::ColorMap& image, CleanImage& tmp)
+bool convertImage(const tp_image_utils::ColorMap& image, CleanImage& tmp, bool includeAlpha)
 {
   if(image.size() < 1 || image.width()<1 || image.height()<1)
     return false;
 
-  tmp.i = FreeImage_Allocate(int(image.width()), int(image.height()), 32);
+  tmp.i = FreeImage_Allocate(int(image.width()), int(image.height()), includeAlpha?32:24);
 
   if(!tmp.i)
     return false;
@@ -52,13 +52,28 @@ bool convertImage(const tp_image_utils::ColorMap& image, CleanImage& tmp)
     //graphics conventions. Thus, the scanlines are stored upside down, with the first scan in
     //memory being the bottommost scan in the image.
     auto d = static_cast<uint8_t*>(FreeImage_GetScanLine(tmp.i, int((h-1)-y)));
-    uint8_t* dMax = d+(w*4);
-    for(; d<dMax; s++, d+=4)
+
+    if(includeAlpha)
     {
-      d[2] = s->r;
-      d[1] = s->g;
-      d[0] = s->b;
-      d[3] = s->a;
+      uint8_t* dMax = d+(w*4);
+      for(; d<dMax; s++, d+=4)
+      {
+        d[2] = s->r;
+        d[1] = s->g;
+        d[0] = s->b;
+        d[3] = s->a;
+      }
+    }
+    else
+    {
+      uint8_t* dMax = d+(w*3);
+      for(; d<dMax; s++, d+=3)
+      {
+        d[2] = s->r;
+        d[1] = s->g;
+        d[0] = s->b;
+        d[3] = s->a;
+      }
     }
   }
 
@@ -75,18 +90,29 @@ void saveImage(const std::string& path, const tp_image_utils::ColorMap& image)
 
   FREE_IMAGE_FORMAT format = FIF_PNG;
 
+  bool includeAlpha=false;
+
   if(tpEndsWith(path, ".png"))
+  {
     format = FIF_PNG;
+    includeAlpha = true;
+  }
   else if(tpEndsWith(path, ".jpg"))
+  {
     format = FIF_JPEG;
+    includeAlpha = false;
+  }
   else if(tpEndsWith(path, ".jpeg"))
+  {
     format = FIF_JPEG;
+    includeAlpha = false;
+  }
   else
     return;
 
   CleanImage tmp;
 
-  if(!convertImage(image, tmp))
+  if(!convertImage(image, tmp, includeAlpha))
     return;
 
   FreeImage_Save(format, tmp.i, path.c_str());
@@ -99,11 +125,56 @@ std::string saveImageToData(const tp_image_utils::ColorMap& image)
 
   CleanImage tmp;
 
-  if(!convertImage(image, tmp))
+  if(!convertImage(image, tmp, true))
     return std::string();
 
   FIMEMORY* stream = FreeImage_OpenMemory();
   FreeImage_SaveToMemory(format, tmp.i, stream);
+  FreeImage_SeekMemory(stream, 0L, SEEK_SET);
+  DWORD sizeBytes = 0;
+  BYTE* data = nullptr;
+  FreeImage_AcquireMemory(stream, &data, &sizeBytes);
+  std::string results(reinterpret_cast<const char*>(data), sizeBytes);
+  FreeImage_CloseMemory(stream);
+
+  return results;
+}
+
+//##################################################################################################
+std::string saveJPEGToData(const tp_image_utils::ColorMap& image, int quality)
+{
+  FREE_IMAGE_FORMAT format = FIF_JPEG;
+
+  int flags = 0;
+
+  if(quality<=10)
+    flags |= JPEG_QUALITYBAD;
+
+  else if(quality<=25)
+    flags |= JPEG_QUALITYAVERAGE;
+
+  else if(quality<=50)
+    flags |= JPEG_QUALITYNORMAL;
+
+  else if(quality<=75)
+    flags |= JPEG_QUALITYAVERAGE;
+
+  else
+    flags |= JPEG_QUALITYSUPERB;
+
+  CleanImage tmp;
+
+  if(!convertImage(image, tmp, false))
+    return std::string();
+
+  FIMEMORY* stream = FreeImage_OpenMemory();
+  if(!FreeImage_SaveToMemory(format, tmp.i, stream, flags))
+  {
+    tpWarning() << "Failed to save JPEG!";
+    return std::string();
+  }
+
+  FreeImage_SeekMemory(stream, 0L, SEEK_SET);
   DWORD sizeBytes = 0;
   BYTE* data = nullptr;
   FreeImage_AcquireMemory(stream, &data, &sizeBytes);
