@@ -6,6 +6,8 @@
 #include "tp_image_utils/ColorMap.h"
 #include "tp_image_utils/ByteMap.h"
 
+#include <FreeImage.h>
+
 #include <vector>
 
 namespace tp_image_utils_freeimage
@@ -13,6 +15,9 @@ namespace tp_image_utils_freeimage
 
 //##################################################################################################
 tp_image_utils::ColorMap loadImage(const std::string& path);
+
+//##################################################################################################
+tp_image_utils::ColorMap loadImage(const std::string& path, const std::function<void(FIBITMAP*)>& closure);
 
 //##################################################################################################
 tp_image_utils::ColorMap loadImageFromData(const std::string& data);

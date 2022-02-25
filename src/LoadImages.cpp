@@ -6,8 +6,6 @@
 #include "tp_utils/JSONUtils.h"
 #include "tp_utils/FileUtils.h"
 
-#include <FreeImage.h>
-
 namespace tp_image_utils_freeimage
 {
 
@@ -104,6 +102,19 @@ tp_image_utils::ColorMap loadImage(const std::string& path)
   CleanImage tmp;
   FREE_IMAGE_FORMAT format = FreeImage_GetFileType(path.c_str(), 0);
   tmp.i = FreeImage_Load(format, path.c_str());
+  return convertToColorMap(tmp);
+}
+
+//##################################################################################################
+tp_image_utils::ColorMap loadImage(const std::string& path, const std::function<void(FIBITMAP*)>& closure)
+{
+  CleanImage tmp;
+  FREE_IMAGE_FORMAT format = FreeImage_GetFileType(path.c_str(), 0);
+  tmp.i = FreeImage_Load(format, path.c_str());
+
+  if(tmp.i)
+    closure(tmp.i);
+
   return convertToColorMap(tmp);
 }
 
