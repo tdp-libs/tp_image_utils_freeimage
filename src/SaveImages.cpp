@@ -72,7 +72,6 @@ bool convertImage(const tp_image_utils::ColorMap& image, CleanImage& tmp, bool i
         d[2] = s->r;
         d[1] = s->g;
         d[0] = s->b;
-        d[3] = s->a;
       }
     }
   }
