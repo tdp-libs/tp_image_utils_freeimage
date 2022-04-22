@@ -16,7 +16,9 @@ namespace
 //##################################################################################################
 void freeImageError(FREE_IMAGE_FORMAT fif, const char* msg)
 {
-  tpWarning() << "FreeImage error: " << msg << ", Format: " << FreeImage_GetFormatFromFIF(fif);
+  const char* error = FreeImage_GetFormatFromFIF(fif);
+  const char* n="null";
+  tpWarning() << "FreeImage error: " << (msg?msg:n) << ", Format: " << (error?error:n);
 }
 }
 
