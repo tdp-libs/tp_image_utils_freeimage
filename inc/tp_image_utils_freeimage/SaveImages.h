@@ -12,7 +12,7 @@ namespace tp_image_utils_freeimage
 {
 
 //##################################################################################################
-void saveImage(const std::string& path, const tp_image_utils::ColorMap& image);
+bool saveImage(const std::string& path, const tp_image_utils::ColorMap& image);
 
 //##################################################################################################
 std::string saveImageToData(const tp_image_utils::ColorMap& image);

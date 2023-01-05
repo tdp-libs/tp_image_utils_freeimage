@@ -82,10 +82,10 @@ bool convertImage(const tp_image_utils::ColorMap& image, CleanImage& tmp, bool i
 }
 
 //##################################################################################################
-void saveImage(const std::string& path, const tp_image_utils::ColorMap& image)
+bool saveImage(const std::string& path, const tp_image_utils::ColorMap& image)
 {
   if(path.empty())
-    return;
+    return false;
 
   FREE_IMAGE_FORMAT format = FIF_PNG;
 
@@ -107,14 +107,14 @@ void saveImage(const std::string& path, const tp_image_utils::ColorMap& image)
     includeAlpha = false;
   }
   else
-    return;
+    return false;
 
   CleanImage tmp;
 
   if(!convertImage(image, tmp, includeAlpha))
-    return;
+    return false;
 
-  FreeImage_Save(format, tmp.i, path.c_str());
+  return FreeImage_Save(format, tmp.i, path.c_str());
 }
 
 //##################################################################################################
