@@ -146,6 +146,8 @@ std::string saveJPEGToData(const tp_image_utils::ColorMap& image, int quality)
 
   int flags = 0;
 
+  flags |= JPEG_OPTIMIZE;
+
   if(quality<=10)
     flags |= JPEG_QUALITYBAD;
 
