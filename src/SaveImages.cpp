@@ -150,6 +150,7 @@ std::string saveJPEGToData(const tp_image_utils::ColorMap& image, int quality)
 
 #if 1
   // The lower 7 bits can be used to pass in the quality directly
+  // https://github.com/leapmotion/FreeImage/blob/master/Source/FreeImage/PluginJPEG.cpp#L1540
   flags |= quality & 0x7F;
 #else
   if(quality<=10)
