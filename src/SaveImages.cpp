@@ -148,6 +148,10 @@ std::string saveJPEGToData(const tp_image_utils::ColorMap& image, int quality)
 
   flags |= JPEG_OPTIMIZE;
 
+#if 1
+  // The lower 7 bits can be used to pass in the quality directly
+  flags |= quality & 0x7F;
+#else
   if(quality<=10)
     flags |= JPEG_QUALITYBAD;
 
@@ -155,13 +159,14 @@ std::string saveJPEGToData(const tp_image_utils::ColorMap& image, int quality)
     flags |= JPEG_QUALITYAVERAGE;
 
   else if(quality<=50)
-    flags |= JPEG_QUALITYNORMAL;
+    flags |= JPEG_QUALITYAVERAGE;
 
   else if(quality<=75)
-    flags |= JPEG_QUALITYAVERAGE;
+    flags |= JPEG_QUALITYNORMAL;
 
   else
     flags |= JPEG_QUALITYSUPERB;
+#endif
 
   CleanImage tmp;
 
