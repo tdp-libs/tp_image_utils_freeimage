@@ -185,7 +185,7 @@ std::string saveJPEGToData(const tp_image_utils::ColorMap& image, int quality)
     flags |= JPEG_QUALITYSUPERB;
 #endif
 
-  return saveImageToData(image, true, format, flags);
+  return saveImageToData(image, false, format, flags);
 }
 
 //##################################################################################################
