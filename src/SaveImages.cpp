@@ -118,17 +118,26 @@ bool saveImage(const std::string& path, const tp_image_utils::ColorMap& image)
 }
 
 //##################################################################################################
-std::string saveImageToData(const tp_image_utils::ColorMap& image)
+std::string saveImageToData(const tp_image_utils::ColorMap& image,
+                            bool includeAlpha,
+                            FREE_IMAGE_FORMAT format,
+                            int flags)
 {
-  FREE_IMAGE_FORMAT format = FIF_PNG;
-
   CleanImage tmp;
 
-  if(!convertImage(image, tmp, true))
+  if(!convertImage(image, tmp, includeAlpha))
+  {
+    tpWarning() << "Failed to convert image!";
     return std::string();
+  }
 
   FIMEMORY* stream = FreeImage_OpenMemory();
-  FreeImage_SaveToMemory(format, tmp.i, stream);
+  if(!FreeImage_SaveToMemory(format, tmp.i, stream, flags))
+  {
+    tpWarning() << "Failed to save image to data!";
+    return std::string();
+  }
+
   FreeImage_SeekMemory(stream, 0L, SEEK_SET);
   DWORD sizeBytes = 0;
   BYTE* data = nullptr;
@@ -140,10 +149,17 @@ std::string saveImageToData(const tp_image_utils::ColorMap& image)
 }
 
 //##################################################################################################
+std::string saveImageToData(const tp_image_utils::ColorMap& image)
+{
+  FREE_IMAGE_FORMAT format = FIF_PNG;
+  int flags = 0;
+  return saveImageToData(image, true, format, flags);
+}
+
+//##################################################################################################
 std::string saveJPEGToData(const tp_image_utils::ColorMap& image, int quality)
 {
   FREE_IMAGE_FORMAT format = FIF_JPEG;
-
   int flags = 0;
 
   flags |= JPEG_OPTIMIZE;
@@ -169,26 +185,20 @@ std::string saveJPEGToData(const tp_image_utils::ColorMap& image, int quality)
     flags |= JPEG_QUALITYSUPERB;
 #endif
 
-  CleanImage tmp;
+  return saveImageToData(image, true, format, flags);
+}
 
-  if(!convertImage(image, tmp, false))
-    return std::string();
+//##################################################################################################
+std::string saveWebPToData(const tp_image_utils::ColorMap& image, int quality)
+{
+  FREE_IMAGE_FORMAT format = FIF_WEBP;
+  int flags = 0;
 
-  FIMEMORY* stream = FreeImage_OpenMemory();
-  if(!FreeImage_SaveToMemory(format, tmp.i, stream, flags))
-  {
-    tpWarning() << "Failed to save JPEG!";
-    return std::string();
-  }
+  // The lower 7 bits can be used to pass in the quality directly
+  // https://github.com/imazen/freeimage/blob/master/Source/FreeImage/PluginWebP.cpp#L481
+  flags |= quality & 0x7F;
 
-  FreeImage_SeekMemory(stream, 0L, SEEK_SET);
-  DWORD sizeBytes = 0;
-  BYTE* data = nullptr;
-  FreeImage_AcquireMemory(stream, &data, &sizeBytes);
-  std::string results(reinterpret_cast<const char*>(data), sizeBytes);
-  FreeImage_CloseMemory(stream);
-
-  return results;
+  return saveImageToData(image, true, format, flags);
 }
 
 }

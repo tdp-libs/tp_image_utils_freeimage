@@ -37,6 +37,7 @@ void init()
   tp_image_utils::saveImage_         = saveImage;
   tp_image_utils::saveImageToData_   = saveImageToData;
   tp_image_utils::saveJPEGToData_    = saveJPEGToData;
+  tp_image_utils::saveWebPToData_    = saveWebPToData;
 }
 }
 

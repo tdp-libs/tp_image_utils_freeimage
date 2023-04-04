@@ -20,6 +20,9 @@ std::string saveImageToData(const tp_image_utils::ColorMap& image);
 //##################################################################################################
 std::string saveJPEGToData(const tp_image_utils::ColorMap& image, int quality);
 
+//##################################################################################################
+std::string saveWebPToData(const tp_image_utils::ColorMap& image, int quality);
+
 }
 
 #endif
