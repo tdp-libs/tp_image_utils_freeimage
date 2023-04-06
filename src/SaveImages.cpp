@@ -198,7 +198,22 @@ std::string saveWebPToData(const tp_image_utils::ColorMap& image, int quality)
   // https://github.com/imazen/freeimage/blob/master/Source/FreeImage/PluginWebP.cpp#L481
   flags |= quality & 0x7F;
 
-  return saveImageToData(image, true, format, flags);
+  bool hasAlpha=false;
+  if(image.size()>0)
+  {
+    auto p=image.constData();
+    auto pMax = p+image.size();
+    for(; p<pMax; p++)
+    {
+      if(p->a!=255)
+      {
+        hasAlpha = true;
+        break;
+      }
+    }
+  }
+
+  return saveImageToData(image, hasAlpha, format, flags);
 }
 
 }
