@@ -1,7 +1,7 @@
 TARGET = tp_image_utils_freeimage
 TEMPLATE = lib
 
-DEFINES += tp_image_utils_FREEIMAGE_LIBRARY
+DEFINES += TP_IMAGE_UTILS_FREEIMAGE_LIBRARY
 
 SOURCES += src/Globals.cpp
 HEADERS += inc/tp_image_utils_freeimage/Globals.h
