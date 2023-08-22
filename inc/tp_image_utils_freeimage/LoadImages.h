@@ -1,10 +1,9 @@
 #ifndef tp_image_utils__freeimage_LoadImages_h
 #define tp_image_utils__freeimage_LoadImages_h
 
-#include "tp_image_utils_freeimage/Globals.h"
+#include "tp_image_utils_freeimage/Globals.h" //IWYU pragma: keep
 
 #include "tp_image_utils/ColorMap.h"
-#include "tp_image_utils/ByteMap.h"
 
 #include <FreeImage.h>
 
