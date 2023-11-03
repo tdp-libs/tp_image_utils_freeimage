@@ -150,7 +150,7 @@ std::vector<tp_image_utils::ColorMap> loadImages(const std::string& path, std::v
     result.push_back(dst);
 
     std::vector<std::string> parts;
-    tpSplit(parts, imagePath, '/', tp_utils::SplitBehavior::KeepEmptyParts);
+    tpSplit(parts, imagePath, '/', TPSplitBehavior::KeepEmptyParts);
 
     names.push_back(parts.back());
   }
