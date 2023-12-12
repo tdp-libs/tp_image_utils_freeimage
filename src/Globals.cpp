@@ -28,6 +28,7 @@ void init()
   FreeImage_SetOutputMessage(freeImageError);
   FreeImage_Initialise();
   FreeImage_SetPluginEnabled(FIF_JPEG, true);
+  FreeImage_SetPluginEnabled(FIF_WEBP, true);
 
   tp_image_utils::loadImage_         = loadImage;
   tp_image_utils::loadImageFromData_ = loadImageFromData;
