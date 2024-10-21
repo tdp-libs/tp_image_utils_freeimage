@@ -1,31 +1,19 @@
 #include "tp_image_utils_freeimage/LoadImages.h"
 #include "tp_image_utils_freeimage/SaveImages.h"
+#include "tp_image_utils_freeimage/FreeImageErrors.h"
 
 #include "tp_image_utils/LoadImages.h"
 #include "tp_image_utils/SaveImages.h"
-
-#include "tp_utils/DebugUtils.h"
 
 #include <FreeImage.h>
 
 namespace tp_image_utils_freeimage
 {
 
-namespace
-{
-//##################################################################################################
-void freeImageError(FREE_IMAGE_FORMAT fif, const char* msg)
-{
-  const char* error = FreeImage_GetFormatFromFIF(fif);
-  const char* n="null";
-  tpWarning() << "FreeImage error: " << (msg?msg:n) << ", Format: " << (error?error:n);
-}
-}
-
 //##################################################################################################
 void init()
 {
-  FreeImage_SetOutputMessage(freeImageError);
+  initErrors();
   FreeImage_Initialise();
   FreeImage_SetPluginEnabled(FIF_JPEG, true);
   FreeImage_SetPluginEnabled(FIF_WEBP, true);
@@ -40,5 +28,6 @@ void init()
   tp_image_utils::saveJPEGToData_    = saveJPEGToData;
   tp_image_utils::saveWebPToData_    = saveWebPToData;
 }
+
 }
 

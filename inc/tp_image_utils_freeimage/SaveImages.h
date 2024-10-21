@@ -1,7 +1,7 @@
 #ifndef tp_image_utils_freeimage_SaveImages_h
 #define tp_image_utils_freeimage_SaveImages_h
 
-#include "tp_image_utils_freeimage/Globals.h"
+#include "tp_image_utils_freeimage/Globals.h" // IWYU pragma: keep
 
 namespace tp_image_utils
 {

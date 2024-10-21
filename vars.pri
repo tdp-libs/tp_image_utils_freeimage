@@ -6,6 +6,9 @@ DEFINES += TP_IMAGE_UTILS_FREEIMAGE_LIBRARY
 SOURCES += src/Globals.cpp
 HEADERS += inc/tp_image_utils_freeimage/Globals.h
 
+SOURCES += src/FreeImageErrors.cpp
+HEADERS += inc/tp_image_utils_freeimage/FreeImageErrors.h
+
 SOURCES += src/LoadImages.cpp
 HEADERS += inc/tp_image_utils_freeimage/LoadImages.h
 
