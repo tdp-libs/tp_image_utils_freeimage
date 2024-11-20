@@ -111,7 +111,7 @@ void removeFalseErrors(const tp_image_utils::ColorMap& image, std::vector<std::s
 {
   // Kludge to remove a specific error that is produced for some seemingly valid JPEG files. Even
   // when the error presents the image loads fine.
-  if(errors.size() == 1 and image.size()>0 and tpStartsWith(errors.front(), "FreeImage error: Not a JPEG file: starts with"))
+  if(errors.size() == 1 && image.size()>0 && tpStartsWith(errors.front(), "FreeImage error: Not a JPEG file: starts with"))
   {
     errors.clear();
     return;
